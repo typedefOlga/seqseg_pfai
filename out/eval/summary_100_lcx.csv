@@ -1,0 +1,2 @@
+variant,steps_f,steps_b,seqseg_s,eval_s,total_s,config,dice,cl_dice,precision,recall,f1,hd,hd95,assd,chamfer,boundary_f1@0.12,boundary_precision@0.12,boundary_recall@0.12,b0_pred,b1_pred,b2_pred,b0_gt,b1_gt,b2_gt,b0_err,b1_err,b2_err,centerline_md,centerline_hd95,coverage@1.0mm,radius_mae,radius_rmse,radius_bias,pred_voxels,gt_voxels
+UNION,,,,,,,0.2445,0.3045,0.1418,0.888,0.2445,74.844,71.1258,14.6898,14.7229,0.2345,0.1371,0.8116,1,2,0,1,0,0,0,2,0,24.9585,73.3863,0.2327,0.1855,0.2201,-0.1816,27915,4456

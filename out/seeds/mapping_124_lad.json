@@ -1,0 +1,82 @@
+[
+  {
+    "case": "124_lad_f",
+    "scan": "124",
+    "vessel": "LAD",
+    "direction": "f",
+    "new_ras": [
+      -59.1299,
+      170.8486,
+      40.45
+    ],
+    "old_ras": [
+      -58.4432,
+      170.2255,
+      40.8244
+    ],
+    "new_lps": [
+      59.1299,
+      -170.8486,
+      40.45
+    ],
+    "old_lps": [
+      58.4432,
+      -170.2255,
+      40.8244
+    ],
+    "tangent_ras": [
+      -0.6867,
+      0.6231,
+      -0.3744
+    ],
+    "radius_raw_mm": 0.7294,
+    "radius_mm": 1.0,
+    "note": "start click, trace distal",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      347,
+      299,
+      185
+    ]
+  },
+  {
+    "case": "124_lad_b",
+    "scan": "124",
+    "vessel": "LAD",
+    "direction": "b",
+    "new_ras": [
+      -59.7666,
+      202.3662,
+      -11.05
+    ],
+    "old_ras": [
+      -60.1279,
+      202.0457,
+      -10.1744
+    ],
+    "new_lps": [
+      59.7666,
+      -202.3662,
+      -11.05
+    ],
+    "old_lps": [
+      60.1279,
+      -202.0457,
+      -10.1744
+    ],
+    "tangent_ras": [
+      -0.3613,
+      -0.3205,
+      0.8756
+    ],
+    "radius_raw_mm": 0.5514,
+    "radius_mm": 1.0,
+    "note": "end click r=0.55, \u043d\u0435\u0442 \u0442\u043e\u0447\u043a\u0438 >= 1.20 (max 0.86) -> \u043a\u043e\u043d\u0446\u0435\u0432\u043e\u0439 \u043a\u043b\u0438\u043a",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      349,
+      398,
+      82
+    ]
+  }
+]

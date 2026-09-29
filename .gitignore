@@ -1,0 +1,18 @@
+# промежуточные и тяжёлые артефакты SeqSeg
+out/seqseg/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# маски (производные от КТ) — не публикуем
+*.nii.gz
+*.nii
+
+# логи прогонов
+out/reports/*.log
+
+# служебное состояние прогонов
+out/reports/status_*.json

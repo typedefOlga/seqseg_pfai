@@ -1,0 +1,4 @@
+scan,vessel,status,steps_f,steps_b,seqseg_s,eval_s,total_s,config
+103,lad,done,50,4,67.6,3.5,71.1,global_coro
+124,lad,done,37,4,64.0,3.8,67.9,global_coro
+109,lcx,done,8,4,36.3,3.7,40.2,global_coro

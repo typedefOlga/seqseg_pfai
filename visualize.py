@@ -113,6 +113,7 @@ def main() -> int:
     names = [n for n in VARIANT_ORDER if n in variants]
     fig, axes = plt.subplots(len(names), 3, figsize=(16, 4.6 * len(names)),
                              dpi=130, layout="constrained", squeeze=False)
+    fig.get_layout_engine().set(w_pad=0.01, h_pad=0.01, wspace=0.0, hspace=0.0)
     for ri, name in enumerate(names):
         pred_m = variants[name]
         for ci, (title, drop, row, col, rlab, clab) in enumerate(PROJECTION_PANELS):
@@ -179,6 +180,8 @@ def main() -> int:
     for name in names:
         fig, axes = plt.subplots(1, 3, figsize=(16, 4.8), dpi=130,
                                  layout="constrained", squeeze=False)
+        fig.get_layout_engine().set(w_pad=0.01, h_pad=0.01, wspace=0.0,
+                                    hspace=0.0)
         for ci, (title, drop, row, col, rlab, clab) in enumerate(PROJECTION_PANELS):
             ax = axes[0, ci]
             panel, fr, fc = composite_panel(

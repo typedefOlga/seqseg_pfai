@@ -66,7 +66,7 @@ def build_seed(sample: dict, direction: str, step_mm: float,
                 note = (f"end click r={radius_raw:.2f}<{min_start_radius:.2f}, "
                         f"inset to cl[{k}] r={rad[k]:.2f}")
                 radius_raw = float(rad[k])
-        old = new + step_mm * tangent
+        old = new - step_mm * tangent
     else:
         raise ValueError(direction)
 

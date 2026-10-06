@@ -23,6 +23,7 @@ from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
+import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 import nibabel as nib
 import numpy as np
@@ -38,6 +39,7 @@ PRED_COLOR = (0.90, 0.15, 0.15)    # красный — pred-only
 OVER_COLOR = (0.10, 0.85, 0.20)    # зелёный — пересечение
 CLICK_START = "#FF2D95"
 CLICK_END = "#00E5FF"
+CENTERLINE = "#FFD400"
 ALPHA = 0.85
 
 
@@ -60,8 +62,12 @@ def panel_clscat(grey, gt, pred, affine, drop, row, col):
 
 
 def render(scan: str, vessel: str, out_dir: Path,
-           margin_mm: float = 20.0) -> bool:
-    pred_path = common.OUT / "eval" / f"{scan}_{vessel}" / "union.nii.gz"
+           margin_mm: float = 20.0, pred_path=None,
+           tag: str = "clscat", full: bool = False,
+           centerline: bool = False) -> bool:
+    if pred_path is None:
+        pred_path = common.OUT / "eval" / f"{scan}_{vessel}" / "union.nii.gz"
+    pred_path = Path(pred_path)
     if not pred_path.is_file():
         print(f"  нет {pred_path}")
         return False
@@ -74,6 +80,7 @@ def render(scan: str, vessel: str, out_dir: Path,
     sample = common.load_sample(scan, vessel)
     clicks = np.array([sample["points"][0]["click_xyz"],
                        sample["points"][1]["click_xyz"]], float)
+    cl_world = np.array([c["xyz"] for c in sample["centerline"]], float)
 
     fig, axes = plt.subplots(1, 3, figsize=(18, 5.6), dpi=200,
                              layout="constrained", squeeze=False)
@@ -84,13 +91,19 @@ def render(scan: str, vessel: str, out_dir: Path,
         sr = float(abs(affine[row, row]))
         sc = float(abs(affine[col, col]))
         ax.imshow(rgb, origin="lower", interpolation="nearest", aspect=sr / sc)
-        ax.set_xlim(*view[col])
-        ax.set_ylim(*view[row])
+        if not full:
+            ax.set_xlim(*view[col])
+            ax.set_ylim(*view[row])
         ax.set_xlabel(f"{clab}, индекс", fontsize=10)
         ax.set_ylabel(f"{rlab}, индекс", fontsize=10)
         ax.tick_params(labelsize=8)
-        cc, rr = voxel_in_view(clicks, affine, row, col,
-                               rgb.shape[:2], fr, fc)
+        shape = rgb.shape[:2]
+        if centerline:
+            lc, lr = voxel_in_view(cl_world, affine, row, col, shape, fr, fc)
+            ax.plot(lc, lr, "-", color=CENTERLINE, lw=2.2, alpha=1.0, zorder=8,
+                    path_effects=[pe.withStroke(linewidth=3.6,
+                                                foreground="black")])
+        cc, rr = voxel_in_view(clicks, affine, row, col, shape, fr, fc)
         ax.plot(cc[0], rr[0], "X", color=CLICK_START, ms=10, mec="black",
                 mew=1.0, zorder=7)
         ax.plot(cc[1], rr[1], "X", color=CLICK_END, ms=10, mec="black",
@@ -102,16 +115,24 @@ def render(scan: str, vessel: str, out_dir: Path,
                Patch(facecolor=PRED_COLOR, edgecolor="black",
                      label="pred-only (красный)"),
                Patch(facecolor=OVER_COLOR, edgecolor="black",
-                     label="пересечение (зелёный)"),
-               Line2D([0], [0], marker="X", color="none", mec="black",
-                      mfc=CLICK_START, ls="none", ms=9, label="клик старта"),
-               Line2D([0], [0], marker="X", color="none", mec="black",
-                      mfc=CLICK_END, ls="none", ms=9, label="клик конца")]
+                     label="пересечение (зелёный)")]
+    if centerline:
+        handles.append(Line2D([0], [0], color=CENTERLINE, lw=1.8,
+                              label="центрлиния (GT)"))
+    handles += [
+        Line2D([0], [0], marker="X", color="none", mec="black",
+               mfc=CLICK_START, ls="none", ms=9, label="клик старта"),
+        Line2D([0], [0], marker="X", color="none", mec="black",
+               mfc=CLICK_END, ls="none", ms=9, label="клик конца")]
     fig.legend(handles=handles, loc="outside lower center", ncol=len(handles),
                frameon=False, fontsize=10)
-    fig.suptitle(f"{scan} · {vessel.upper()} · clscat: синий / красный / "
+    label = {"clscat": "union", "cropped_clscat": "cropped",
+             "f_clscat": "F (старт)", "b_clscat": "B (конец)",
+             "inter_clscat": "F∩B"}.get(tag, tag)
+    fig.suptitle(f"{scan} · {vessel.upper()} · {label} clscat: синий / красный / "
                  f"зелёный (1 класс на пиксель)", fontsize=15)
-    p = out_dir / f"{scan}_{vessel}_clscat.png"
+    suffix = ("_full" if full else "") + ("_cl" if centerline else "")
+    p = out_dir / f"{scan}_{vessel}_{tag}{suffix}.png"
     fig.savefig(p)
     plt.close(fig)
     print(f"  сохранено: {p}")
@@ -124,6 +145,12 @@ def main() -> int:
     ap.add_argument("--vessel", action="append", required=True)
     ap.add_argument("--outdir", default=None)
     ap.add_argument("--margin-mm", type=float, default=20.0)
+    ap.add_argument("--pred", choices=("union", "cropped"), default="union",
+                    help="какую маску брать: union или cropped (recount)")
+    ap.add_argument("--full", action="store_true",
+                    help="полное поле (всё сердце), без кропа по GT")
+    ap.add_argument("--centerline", action="store_true",
+                    help="рисовать центрлинию GT поверх")
     args = ap.parse_args()
 
     if len(args.scan) != len(args.vessel):
@@ -135,7 +162,14 @@ def main() -> int:
     n = 0
     for scan, vessel in zip(args.scan, args.vessel):
         print(f"{scan}_{vessel}:")
-        n += render(scan, vessel, out_dir, args.margin_mm)
+        pred_path = None
+        tag = "clscat"
+        if args.pred == "cropped":
+            pred_path = (common.OUT / "recount" /
+                         f"{scan}_{vessel}_cropped.nii.gz")
+            tag = "cropped_clscat"
+        n += render(scan, vessel, out_dir, args.margin_mm, pred_path, tag,
+                    args.full, args.centerline)
     print(f"\nготово: {n} фигур в {out_dir}")
     return 0
 

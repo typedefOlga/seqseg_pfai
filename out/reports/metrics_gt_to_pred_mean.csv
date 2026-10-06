@@ -1,0 +1,17 @@
+group,n,metric,mean,std
+all,119,gt_to_pred_max,3.76652,8.802055
+all,119,gt_to_pred_p95,2.897908,7.785998
+all,119,gt_to_pred_max@sup,58.779535,
+all,119,gt_to_pred_max@p95,22.537508,
+LAD,40,gt_to_pred_max,5.349437,12.369942
+LAD,40,gt_to_pred_p95,4.322302,11.248449
+LAD,40,gt_to_pred_max@sup,58.779535,
+LAD,40,gt_to_pred_max@p95,38.152393,
+LCX,39,gt_to_pred_max,4.362009,6.481171
+LCX,39,gt_to_pred_p95,3.267416,5.419403
+LCX,39,gt_to_pred_max@sup,25.734342,
+LCX,39,gt_to_pred_max@p95,19.344746,
+RCA,40,gt_to_pred_max,1.603002,5.384101
+RCA,40,gt_to_pred_p95,1.113244,4.454146
+RCA,40,gt_to_pred_max@sup,33.855233,
+RCA,40,gt_to_pred_max@p95,5.298549,

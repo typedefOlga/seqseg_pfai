@@ -1,0 +1,82 @@
+[
+  {
+    "case": "43_rca_f",
+    "scan": "43",
+    "vessel": "RCA",
+    "direction": "f",
+    "new_ras": [
+      -11.1855,
+      172.8496,
+      -224.55
+    ],
+    "old_ras": [
+      -12.1771,
+      172.7229,
+      -224.5762
+    ],
+    "new_lps": [
+      11.1855,
+      -172.8496,
+      -224.55
+    ],
+    "old_lps": [
+      12.1771,
+      -172.7229,
+      -224.5762
+    ],
+    "tangent_ras": [
+      0.9916,
+      0.1267,
+      0.0262
+    ],
+    "radius_raw_mm": 1.5062,
+    "radius_mm": 1.5062,
+    "note": "start click, trace distal",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      187,
+      373,
+      153
+    ]
+  },
+  {
+    "case": "43_rca_b",
+    "scan": "43",
+    "vessel": "RCA",
+    "direction": "b",
+    "new_ras": [
+      11.4121,
+      181.541,
+      -245.05
+    ],
+    "old_ras": [
+      11.4725,
+      181.3676,
+      -246.033
+    ],
+    "new_lps": [
+      -11.4121,
+      -181.541,
+      -245.05
+    ],
+    "old_lps": [
+      -11.4725,
+      -181.3676,
+      -246.033
+    ],
+    "tangent_ras": [
+      -0.0604,
+      0.1734,
+      0.983
+    ],
+    "radius_raw_mm": 1.2447,
+    "radius_mm": 1.2447,
+    "note": "end click, trace proximal",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      122,
+      398,
+      112
+    ]
+  }
+]

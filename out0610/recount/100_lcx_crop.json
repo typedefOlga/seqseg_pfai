@@ -1,0 +1,18 @@
+{
+  "scan": "100",
+  "vessel": "lcx",
+  "n_skel_nodes": 723,
+  "n_path_nodes": 75,
+  "path_arc_mm": 37.04,
+  "proj_dist_mm": [
+    1.62,
+    1.19
+  ],
+  "start_click_in_mask": true,
+  "end_click_in_mask": true,
+  "union_voxels": 23182,
+  "cropped_voxels": 4186,
+  "gt_voxels": 3345,
+  "removed_frac": 0.8194,
+  "warnings": []
+}

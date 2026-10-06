@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -19,7 +20,9 @@ import numpy as np
 # --------------------------------------------------------------------------- #
 
 BASE = Path(__file__).resolve().parent
-OUT = BASE / "out"
+OUT = Path(os.environ.get("SEQSEG_OUT", str(BASE / "out")))
+if not OUT.is_absolute():
+    OUT = BASE / OUT
 
 GENERATOR_OUT = Path(
     "/home/y.pchelintsev/vessel-seg/pfai_gen/generator/out/generate")

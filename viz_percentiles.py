@@ -1,9 +1,11 @@
 """Примеры-визуализации по перцентилям Dice (p5/p50/p95) для трёх сосудов.
 
-Основа — `visualize.py`, но цветовая схема TP/FN/FP:
-    зелёный  — совпадение GT и предсказания (TP);
-    синий    — GT без предсказания (FN);
-    красный  — предсказание без GT (FP).
+Схема — как в `viz_diagnose.py`: категориальный clscat, ровно один класс на
+пиксель (приоритет пересечение > pred-only > GT-only), ровно 3 цвета:
+    зелёный  — пересечение GT и предсказания;
+    красный  — предсказание без GT (FP);
+    синий    — GT без предсказания (FN).
+
 Для каждой артерии берётся ближайший по dice кейс к перцентилю 5/50/95
 (метрики — из out/reports/metrics_union.csv), маска — union из
 out/eval/<case>/union.nii.gz.
@@ -23,6 +25,7 @@ from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
+import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 import nibabel as nib
 import numpy as np
@@ -30,62 +33,41 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
 import common
-from common import (PROJECTION_PANELS, grey_from_hu, orient_mip,
-                    view_limits, voxel_in_view)
-
-TP_COLOR = np.array([0.10, 0.85, 0.20])   # GT ∩ pred (совпадение)
-FN_COLOR = np.array([0.20, 0.45, 0.95])   # GT \ pred (пропуск)
-FP_COLOR = np.array([0.95, 0.15, 0.15])   # pred \ GT (лишнее)
-CLICK_START = "#FF2D95"
-CLICK_END = "#00E5FF"
-ALPHA = 0.85
+from common import (PROJECTION_PANELS, grey_from_hu, view_limits,
+                    voxel_in_view)
+from viz_diagnose import (panel_clscat, GT_COLOR, PRED_COLOR, OVER_COLOR,
+                          CLICK_START, CLICK_END, CENTERLINE)
 
 VESSELS = ("lad", "lcx", "rca")
 PERCENTILES = ((5, "p05"), (50, "p50"), (95, "p95"))
 
 
-def panel_tpfn(grey, gt_m, pred_m, affine, drop, row, col):
-    """RGB-панель MIP: TP(зелёный)/FN(синий)/FP(красный) на сером КТ.
-
-    Классы считаются в 3D и проецируются раздельно (корректно по глубине).
-    """
-    base, fr, fc = orient_mip(grey, drop, row, col, affine)
-    tp, _, _ = orient_mip((gt_m & pred_m).astype(np.float32), drop, row, col, affine)
-    fn, _, _ = orient_mip((gt_m & ~pred_m).astype(np.float32), drop, row, col, affine)
-    fp, _, _ = orient_mip((pred_m & ~gt_m).astype(np.float32), drop, row, col, affine)
-
-    rgb = np.stack([base] * 3, axis=-1).astype(np.float32)
-    for mask, color in ((tp > 0.5, TP_COLOR),
-                        (fn > 0.5, FN_COLOR),
-                        (fp > 0.5, FP_COLOR)):
-        if mask.any():
-            rgb[mask] = (1 - ALPHA) * rgb[mask] + ALPHA * color
-    return np.clip(rgb, 0, 1), fr, fc
-
-
-def select_cases(metrics_path: Path) -> dict:
-    """Для каждой артерии — ближайший к p5/p50/p95 кейс: {vessel: {p: (case,dice)}}."""
+def select_cases(metrics_path: Path, metric: str = "dice") -> dict:
+    """Для каждой артерии — ближайший к p5/p50/p95 кейс: {vessel: {p: (case,val)}}."""
     per = {v: [] for v in VESSELS}
     with open(metrics_path, newline="", encoding="utf-8") as f:
         for r in csv.DictReader(f):
-            if r.get("status") == "done" and r.get("vessel") in per:
+            if r.get("status") == "done" and r.get("vessel") in per \
+                    and r.get(metric) not in (None, "", "None"):
                 per[r["vessel"]].append((f"{r['scan']}_{r['vessel']}",
-                                         float(r["dice"])))
+                                         float(r[metric])))
     selected = {}
     for v, items in per.items():
         if not items:
             continue
-        dice = np.array([d for _, d in items])
+        vals = np.array([d for _, d in items])
         selected[v] = {}
         for q, label in PERCENTILES:
-            pv = float(np.percentile(dice, q))
+            pv = float(np.percentile(vals, q))
             case, dd = min(items, key=lambda t: abs(t[1] - pv))
             selected[v][label] = (case, dd, pv)
     return selected
 
 
-def render_example(case: str, vessel: str, label: str, q: int, dice: float,
-                   pv: float, out_path: Path, margin_mm: float = 20.0) -> bool:
+def render_example(case: str, vessel: str, label: str, q: int, mval: float,
+                   pv: float, out_path: Path, margin_mm: float = 20.0,
+                   full: bool = False, centerline: bool = True,
+                   metric: str = "dice") -> bool:
     scan = case.rsplit("_", 1)[0]
     pred_path = common.OUT / "eval" / case / "union.nii.gz"
     if not pred_path.is_file():
@@ -99,48 +81,54 @@ def render_example(case: str, vessel: str, label: str, q: int, dice: float,
     grey = grey_from_hu(ct)
     view = view_limits(gt, affine, margin_mm=margin_mm)
 
-    cl_xyz = np.array([c["xyz"] for c in sample["centerline"]], float)
     clicks = np.array([sample["points"][0]["click_xyz"],
                        sample["points"][1]["click_xyz"]], float)
+    cl_world = np.array([c["xyz"] for c in sample["centerline"]], float)
 
-    fig, axes = plt.subplots(1, 3, figsize=(16, 4.9), dpi=130,
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5.6), dpi=200,
                              layout="constrained", squeeze=False)
     fig.get_layout_engine().set(w_pad=0.01, h_pad=0.01, wspace=0.0, hspace=0.0)
     for ci, (title, drop, row, col, rlab, clab) in enumerate(PROJECTION_PANELS):
         ax = axes[0, ci]
-        rgb, fr, fc = panel_tpfn(grey, gt, pred, affine, drop, row, col)
+        rgb, fr, fc = panel_clscat(grey, gt, pred, affine, drop, row, col)
         sr = float(abs(affine[row, row]))
         sc = float(abs(affine[col, col]))
         ax.imshow(rgb, origin="lower", interpolation="nearest", aspect=sr / sc)
-        ax.set_xlim(*view[col])
-        ax.set_ylim(*view[row])
-        ax.set_xlabel(f"{clab}, индекс", fontsize=9)
-        ax.set_ylabel(f"{rlab}, индекс", fontsize=9)
-        ax.tick_params(labelsize=7)
-        c, r = voxel_in_view(cl_xyz, affine, row, col, rgb.shape[:2], fr, fc)
-        ax.plot(c, r, "-", color="black", lw=1.3, zorder=6)
-        cc, rr = voxel_in_view(clicks, affine, row, col, rgb.shape[:2], fr, fc)
-        ax.plot(cc[0], rr[0], "X", color=CLICK_START, ms=11, mec="black",
+        if not full:
+            ax.set_xlim(*view[col])
+            ax.set_ylim(*view[row])
+        ax.set_xlabel(f"{clab}, индекс", fontsize=10)
+        ax.set_ylabel(f"{rlab}, индекс", fontsize=10)
+        ax.tick_params(labelsize=8)
+        shape = rgb.shape[:2]
+        if centerline:
+            lc, lr = voxel_in_view(cl_world, affine, row, col, shape, fr, fc)
+            ax.plot(lc, lr, "-", color=CENTERLINE, lw=2.2, alpha=1.0, zorder=8,
+                    path_effects=[pe.withStroke(linewidth=3.6,
+                                                foreground="black")])
+        cc, rr = voxel_in_view(clicks, affine, row, col, shape, fr, fc)
+        ax.plot(cc[0], rr[0], "X", color=CLICK_START, ms=10, mec="black",
                 mew=1.0, zorder=7)
-        ax.plot(cc[1], rr[1], "X", color=CLICK_END, ms=11, mec="black",
+        ax.plot(cc[1], rr[1], "X", color=CLICK_END, ms=10, mec="black",
                 mew=1.0, zorder=7)
-        ax.set_title(title, fontsize=12)
+        ax.set_title(title, fontsize=13)
 
-    handles = [
-        Patch(facecolor=TP_COLOR, edgecolor="black", label="TP — совпадение GT и pred"),
-        Patch(facecolor=FN_COLOR, edgecolor="black", label="FN — GT не найден"),
-        Patch(facecolor=FP_COLOR, edgecolor="black", label="FP — лишнее у pred"),
-        Line2D([0], [0], color="black", lw=1.3, label="центрлиния фрагмента"),
-        Line2D([0], [0], marker="X", color="none", mec="black",
-               mfc=CLICK_START, ls="none", ms=10, label="клик старта"),
-        Line2D([0], [0], marker="X", color="none", mec="black",
-               mfc=CLICK_END, ls="none", ms=10, label="клик конца"),
-    ]
-    fig.legend(handles=handles, loc="outside lower center", ncol=3,
-               frameon=False, fontsize=9)
+    handles = [Patch(facecolor=GT_COLOR, edgecolor="black",
+                     label="GT-only (синий)"),
+               Patch(facecolor=PRED_COLOR, edgecolor="black",
+                     label="pred-only (красный)"),
+               Patch(facecolor=OVER_COLOR, edgecolor="black",
+                     label="пересечение (зелёный)"),
+               Line2D([0], [0], marker="X", color="none", mec="black",
+                      mfc=CLICK_START, ls="none", ms=9, label="клик старта"),
+               Line2D([0], [0], marker="X", color="none", mec="black",
+                      mfc=CLICK_END, ls="none", ms=9, label="клик конца")]
+    fig.legend(handles=handles, loc="outside lower center", ncol=len(handles),
+               frameon=False, fontsize=10)
+    unit = ", мм" if "hd" in metric else ""
     fig.suptitle(
-        f"{vessel.upper()} · {label} (p{q}={pv:.3f}) · {case} · dice={dice:.3f}",
-        fontsize=15)
+        f"{vessel.upper()} · click-crop · {label} (p{q}={pv:.3f}{unit}) · "
+        f"{case} · {metric}={mval:.3f}", fontsize=15)
     fig.savefig(out_path)
     plt.close(fig)
     print(f"  сохранено: {out_path}")
@@ -152,6 +140,17 @@ def main() -> int:
     ap.add_argument("--metrics", default=None)
     ap.add_argument("--outdir", default=None)
     ap.add_argument("--margin-mm", type=float, default=20.0)
+    ap.add_argument("--metric", default="dice",
+                    help="метрика для выбора кейсов (колонка CSV), "
+                         "например centerline_hd95")
+    ap.add_argument("--vessels", default="lad,lcx,rca",
+                    help="какие артерии (через запятую)")
+    ap.add_argument("--percentiles", default="5,50,95",
+                    help="какие перцентили (через запятую)")
+    ap.add_argument("--full", action="store_true",
+                    help="полное поле (всё сердце), без кропа по GT")
+    ap.add_argument("--no-centerline", dest="centerline", action="store_false",
+                    help="не рисовать центрлинию GT")
     args = ap.parse_args()
 
     metrics_path = (Path(args.metrics) if args.metrics
@@ -160,16 +159,21 @@ def main() -> int:
                else common.OUT / "viz" / "statistic")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    selected = select_cases(metrics_path)
+    keep_v = {v.strip().lower() for v in args.vessels.split(",") if v.strip()}
+    keep_q = {int(x) for x in args.percentiles.split(",") if x.strip()}
+    percentiles = [(q, lab) for q, lab in PERCENTILES if q in keep_q]
+
+    selected = select_cases(metrics_path, args.metric)
     n_made = 0
     for vessel in VESSELS:
-        if vessel not in selected:
+        if vessel not in selected or vessel not in keep_v:
             continue
-        for q, label in PERCENTILES:
-            case, dice, pv = selected[vessel][label]
+        for q, label in percentiles:
+            case, mval, pv = selected[vessel][label]
             out_path = out_dir / f"{vessel}_{label}.png"
-            if render_example(case, vessel, label, q, dice, pv, out_path,
-                              margin_mm=args.margin_mm):
+            if render_example(case, vessel, label, q, mval, pv, out_path,
+                              margin_mm=args.margin_mm, full=args.full,
+                              centerline=args.centerline, metric=args.metric):
                 n_made += 1
     print(f"\nготово: {n_made} фигур в {out_dir}")
     return 0

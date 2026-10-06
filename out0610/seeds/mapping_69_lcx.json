@@ -1,0 +1,82 @@
+[
+  {
+    "case": "69_lcx_f",
+    "scan": "69",
+    "vessel": "LCX",
+    "direction": "f",
+    "new_ras": [
+      -39.4531,
+      175.9844,
+      -179.55
+    ],
+    "old_ras": [
+      -38.6311,
+      176.4654,
+      -179.2449
+    ],
+    "new_lps": [
+      39.4531,
+      -175.9844,
+      -179.55
+    ],
+    "old_lps": [
+      38.6311,
+      -176.4654,
+      -179.2449
+    ],
+    "tangent_ras": [
+      -0.822,
+      -0.481,
+      -0.3051
+    ],
+    "radius_raw_mm": 1.7711,
+    "radius_mm": 1.7711,
+    "note": "start click, trace distal",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      251,
+      238,
+      193
+    ]
+  },
+  {
+    "case": "69_lcx_b",
+    "scan": "69",
+    "vessel": "LCX",
+    "direction": "b",
+    "new_ras": [
+      -61.1094,
+      159.1479,
+      -197.3684
+    ],
+    "old_ras": [
+      -61.4033,
+      158.5089,
+      -198.0792
+    ],
+    "new_lps": [
+      61.1094,
+      -159.1479,
+      -197.3684
+    ],
+    "old_lps": [
+      61.4033,
+      -158.5089,
+      -198.0792
+    ],
+    "tangent_ras": [
+      0.2939,
+      0.639,
+      0.7108
+    ],
+    "radius_raw_mm": 1.2377,
+    "radius_mm": 1.2377,
+    "note": "end click r=1.10<1.20, inset to cl[66] r=1.24",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      314,
+      189,
+      157
+    ]
+  }
+]

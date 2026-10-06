@@ -1,0 +1,82 @@
+[
+  {
+    "case": "124_rca_f",
+    "scan": "124",
+    "vessel": "RCA",
+    "direction": "f",
+    "new_ras": [
+      -9.7842,
+      177.8525,
+      30.45
+    ],
+    "old_ras": [
+      -10.7346,
+      177.6107,
+      30.6455
+    ],
+    "new_lps": [
+      9.7842,
+      -177.8525,
+      30.45
+    ],
+    "old_lps": [
+      10.7346,
+      -177.6107,
+      30.6455
+    ],
+    "tangent_ras": [
+      0.9504,
+      0.2418,
+      -0.1955
+    ],
+    "radius_raw_mm": 0.7466,
+    "radius_mm": 1.0,
+    "note": "start click, trace distal",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      192,
+      321,
+      165
+    ]
+  },
+  {
+    "case": "124_rca_b",
+    "scan": "124",
+    "vessel": "RCA",
+    "direction": "b",
+    "new_ras": [
+      7.7255,
+      179.732,
+      13.9501
+    ],
+    "old_ras": [
+      8.4047,
+      179.6018,
+      13.2278
+    ],
+    "new_lps": [
+      -7.7255,
+      -179.732,
+      13.9501
+    ],
+    "old_lps": [
+      -8.4047,
+      -179.6018,
+      13.2278
+    ],
+    "tangent_ras": [
+      -0.6792,
+      0.1302,
+      0.7223
+    ],
+    "radius_raw_mm": 0.955,
+    "radius_mm": 1.0,
+    "note": "end click r=0.94, \u043d\u0435\u0442 \u0442\u043e\u0447\u043a\u0438 >= 1.20 (max 0.95) -> \u0441\u0430\u043c\u0430\u044f \u0448\u0438\u0440\u043e\u043a\u0430\u044f cl[55] r=0.95",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      137,
+      327,
+      132
+    ]
+  }
+]

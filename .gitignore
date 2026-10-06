@@ -16,3 +16,15 @@ out/reports/*.log
 
 # служебное состояние прогонов
 out/reports/status_*.json
+
+# новый прогон 0610: исключаем тяжёлые промежуточные артефакты
+out0610/seqseg/
+out0610/eval_200/
+out0610/reports/*.log
+out0610/reports/status_*.json
+
+# меши/объёмы SeqSeg и промежуточные выходы recount
+*.mha
+*.vtp
+recount/out/
+recount/viz/

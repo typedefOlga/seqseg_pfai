@@ -45,6 +45,9 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Распределение Dice по сосудам")
     ap.add_argument("--metrics", default=None)
     ap.add_argument("--outdir", default=None)
+    ap.add_argument("--title",
+                    default="Распределение Dice: SeqSeg (union, кроп) "
+                            "vs истинный фрагмент")
     args = ap.parse_args()
 
     src = (Path(args.metrics) if args.metrics
@@ -84,8 +87,7 @@ def main() -> int:
         ax.set_xlim(0.0, 1.0)
         ax.grid(alpha=0.2)
 
-    fig.suptitle("Распределение Dice: SeqSeg (union, кроп) vs истинный фрагмент",
-                 fontsize=14)
+    fig.suptitle(args.title, fontsize=14)
     png = out_dir / "dice_distribution.png"
     fig.savefig(png)
     plt.close(fig)

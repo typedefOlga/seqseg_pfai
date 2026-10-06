@@ -1,0 +1,183 @@
+shard 0/2: 60 кейсов, GPU 3
+
+[1/60] 3_lad
+  готово: total=158.1s seqseg=151.1s steps f/b=50/55
+
+[2/60] 3_rca
+  готово: total=181.9s seqseg=176.6s steps f/b=50/80
+
+[3/60] 9_lcx
+  готово: total=143.5s seqseg=137.6s steps f/b=50/58
+
+[4/60] 14_lad
+  готово: total=160.9s seqseg=152.6s steps f/b=50/57
+
+[5/60] 14_rca
+  готово: total=189.4s seqseg=183.0s steps f/b=51/65
+
+[6/60] 30_lcx
+  готово: total=134.9s seqseg=130.5s steps f/b=36/44
+
+[7/60] 41_lad
+  готово: total=136.3s seqseg=129.5s steps f/b=51/55
+
+[8/60] 41_rca
+  готово: total=192.4s seqseg=187.1s steps f/b=63/69
+
+[9/60] 42_lcx
+  готово: total=96.8s seqseg=91.4s steps f/b=50/18
+
+[10/60] 43_lad
+  готово: total=151.1s seqseg=144.1s steps f/b=50/58
+
+[11/60] 43_rca
+  готово: total=148.2s seqseg=142.9s steps f/b=50/59
+
+[12/60] 45_lcx
+  готово: total=144.6s seqseg=138.7s steps f/b=51/52
+
+[13/60] 52_lad
+  готово: total=165.5s seqseg=158.3s steps f/b=50/58
+
+[14/60] 52_rca
+  готово: total=106.1s seqseg=101.0s steps f/b=50/30
+
+[15/60] 63_lcx
+  готово: total=148.7s seqseg=143.9s steps f/b=55/63
+
+[16/60] 69_lad
+  готово: total=142.7s seqseg=135.3s steps f/b=57/50
+
+[17/60] 69_rca
+  готово: total=144.3s seqseg=138.2s steps f/b=53/35
+
+[18/60] 80_lcx
+  готово: total=168.6s seqseg=163.0s steps f/b=58/68
+
+[19/60] 85_lad
+  готово: total=210.4s seqseg=204.5s steps f/b=71/69
+
+[20/60] 85_rca
+  готово: total=151.2s seqseg=144.7s steps f/b=51/60
+
+[21/60] 87_lcx
+  готово: total=151.1s seqseg=144.5s steps f/b=54/55
+
+[22/60] 88_lad
+  готово: total=150.4s seqseg=142.8s steps f/b=53/58
+
+[23/60] 88_rca
+  готово: total=87.5s seqseg=82.9s steps f/b=50/21
+
+[24/60] 95_lcx
+  готово: total=212.6s seqseg=207.4s steps f/b=50/80
+
+[25/60] 100_lad
+  готово: total=5.9s seqseg=Nones steps f/b=None/None
+
+[26/60] 100_rca
+  готово: total=3.3s seqseg=Nones steps f/b=None/None
+
+[27/60] 102_lcx
+  готово: total=186.4s seqseg=180.6s steps f/b=60/62
+
+[28/60] 103_lad
+  готово: total=138.3s seqseg=133.3s steps f/b=56/68
+
+[29/60] 103_rca
+  готово: total=139.9s seqseg=132.5s steps f/b=50/61
+
+[30/60] 109_lcx
+  готово: total=103.0s seqseg=96.4s steps f/b=8/50
+
+[31/60] 112_lad
+  готово: total=190.6s seqseg=182.3s steps f/b=50/56
+
+[32/60] 112_rca
+  готово: total=175.2s seqseg=169.9s steps f/b=50/69
+
+[33/60] 114_lcx
+  готово: total=175.9s seqseg=169.6s steps f/b=55/60
+
+[34/60] 124_lad
+  готово: total=99.5s seqseg=94.8s steps f/b=54/19
+
+[35/60] 124_rca
+  готово: total=103.3s seqseg=98.5s steps f/b=52/26
+
+[36/60] 125_lcx
+  готово: total=139.3s seqseg=133.0s steps f/b=50/59
+
+[37/60] 129_lad
+  готово: total=158.7s seqseg=151.7s steps f/b=50/55
+
+[38/60] 129_rca
+  готово: total=112.6s seqseg=107.5s steps f/b=54/19
+
+[39/60] 138_lcx
+  готово: total=189.1s seqseg=182.4s steps f/b=50/63
+
+[40/60] 139_lad
+  готово: total=179.3s seqseg=172.1s steps f/b=50/68
+
+[41/60] 139_rca
+  готово: total=103.8s seqseg=98.4s steps f/b=50/30
+
+[42/60] 148_lcx
+  готово: total=159.2s seqseg=152.1s steps f/b=51/54
+
+[43/60] 151_lad
+  готово: total=196.8s seqseg=186.2s steps f/b=50/55
+
+[44/60] 151_rca
+  готово: total=129.9s seqseg=124.0s steps f/b=50/32
+
+[45/60] 173_lcx
+  готово: total=233.8s seqseg=224.7s steps f/b=43/67
+
+[46/60] 175_lad
+  готово: total=272.7s seqseg=261.9s steps f/b=56/56
+
+[47/60] 175_rca
+  готово: total=154.8s seqseg=149.7s steps f/b=50/42
+
+[48/60] 196_lcx
+  готово: total=162.8s seqseg=155.8s steps f/b=54/55
+
+[49/60] 211_lad
+  готово: total=153.7s seqseg=147.9s steps f/b=50/54
+
+[50/60] 211_rca
+  готово: total=144.4s seqseg=138.9s steps f/b=50/60
+
+[51/60] 218_lcx
+  готово: total=143.0s seqseg=137.7s steps f/b=62/56
+
+[52/60] 244_lad
+  готово: total=165.2s seqseg=160.4s steps f/b=58/57
+
+[53/60] 244_rca
+  готово: total=221.0s seqseg=215.4s steps f/b=50/94
+
+[54/60] 251_lcx
+  готово: total=111.7s seqseg=107.8s steps f/b=25/73
+
+[55/60] 252_lad
+  готово: total=125.8s seqseg=120.8s steps f/b=50/55
+
+[56/60] 252_rca
+  готово: total=95.3s seqseg=90.9s steps f/b=50/27
+
+[57/60] 265_lcx
+  готово: total=152.2s seqseg=147.3s steps f/b=54/63
+
+[58/60] 271_lad
+  готово: total=153.3s seqseg=147.2s steps f/b=50/68
+
+[59/60] 271_rca
+  готово: total=124.6s seqseg=119.6s steps f/b=50/55
+
+[60/60] 272_lcx
+  готово: total=147.9s seqseg=142.7s steps f/b=66/55
+
+шард завершён

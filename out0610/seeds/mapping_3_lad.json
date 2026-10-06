@@ -1,0 +1,82 @@
+[
+  {
+    "case": "3_lad_f",
+    "scan": "3",
+    "vessel": "LAD",
+    "direction": "f",
+    "new_ras": [
+      -42.8271,
+      184.9111,
+      165.45
+    ],
+    "old_ras": [
+      -41.9961,
+      184.3548,
+      165.45
+    ],
+    "new_lps": [
+      42.8271,
+      -184.9111,
+      165.45
+    ],
+    "old_lps": [
+      41.9961,
+      -184.3548,
+      165.45
+    ],
+    "tangent_ras": [
+      -0.831,
+      0.5563,
+      0.0
+    ],
+    "radius_raw_mm": 1.0453,
+    "radius_mm": 1.0453,
+    "note": "start click, trace distal",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      291,
+      294,
+      200
+    ]
+  },
+  {
+    "case": "3_lad_b",
+    "scan": "3",
+    "vessel": "LAD",
+    "direction": "b",
+    "new_ras": [
+      -51.6281,
+      197.1963,
+      162.4069
+    ],
+    "old_ras": [
+      -52.1145,
+      198.0462,
+      162.2041
+    ],
+    "new_lps": [
+      51.6281,
+      -197.1963,
+      162.4069
+    ],
+    "old_lps": [
+      52.1145,
+      -198.0462,
+      162.2041
+    ],
+    "tangent_ras": [
+      0.4864,
+      -0.8499,
+      0.2028
+    ],
+    "radius_raw_mm": 1.211,
+    "radius_mm": 1.211,
+    "note": "end click r=0.91<1.20, inset to cl[34] r=1.21",
+    "new_in_fragment": true,
+    "new_voxel_xyz": [
+      315,
+      328,
+      194
+    ]
+  }
+]

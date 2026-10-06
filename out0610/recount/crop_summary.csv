@@ -1,0 +1,2 @@
+scan,vessel,status,ts,n_skel_nodes,n_path_nodes,path_arc_mm,proj_dist_start,proj_dist_end,start_click_in_mask,end_click_in_mask,union_voxels,cropped_voxels,gt_voxels,removed_frac,warnings
+100,lcx,done,2026-10-06 10:24:56,723,75,37.04,1.62,1.19,True,True,23182,4186,3345,0.8194,
